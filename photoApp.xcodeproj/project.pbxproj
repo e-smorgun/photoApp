@@ -29,8 +29,9 @@
 		5C7BAA07285A103F00EC9AB2 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5C7BAA09285A103F00EC9AB2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C95CE80285B32DB00AFBD01 /* ViewControllerReg.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerReg.swift; sourceTree = "<group>"; };
-		5C95CE82285B49D400AFBD01 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AlertView.swift; path = ../../../../Users/evgeny/Downloads/lect17/lect17/AlertView.swift; sourceTree = "<group>"; };
-		5C95CE83285B49D400AFBD01 /* AlertView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AlertView.xib; path = ../../../../Users/evgeny/Downloads/lect17/lect17/AlertView.xib; sourceTree = "<group>"; };
+		5C95CE82285B49D400AFBD01 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		5C95CE83285B49D400AFBD01 /* AlertView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AlertView.xib; sourceTree = "<group>"; };
+		5CBB82A1285DC4D8007BF75D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
 		5CBE82AA285A806500003F87 /* ViewControllerPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerPhoto.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -167,6 +168,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				5C7BAA02285A103F00EC9AB2 /* Base */,
+				5CBB82A1285DC4D8007BF75D /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
