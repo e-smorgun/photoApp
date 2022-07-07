@@ -20,18 +20,19 @@ public struct SomeImage: Codable {
     }
 }
 
-class ViewControllerPhoto: UIViewController {
+class ViewControllerPhoto: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+        
     @IBOutlet weak var addPhotoButton: UIButton!
     @IBOutlet weak var leftUmage: UIImageView!
     @IBOutlet weak var centerImage: UIImageView!
     @IBOutlet weak var rightImage: UIImageView!
     @IBOutlet weak var isLikedImage: UIImageView!
-    @IBOutlet weak var commentField: UITextField!
-    @IBOutlet var botomSize: NSLayoutConstraint!
+    @IBOutlet var collectionView: UICollectionView!
+
 
     var countOfImage = 0
     var position = 0
-    var images:[UIImage] = []
+    var images: [UIImage] = []
     var alertView: AlertView?
     
     enum UserDefaultsKey: String {
@@ -40,7 +41,8 @@ class ViewControllerPhoto: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        collectionView.reloadData()
+
         centerImage.image = UIImage(named: "addImage")
         if let imageData: Data =  UserDefaults.standard.object(forKey:  UserDefaultsKey.kPhoto.rawValue) as? Data {
             if let someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
@@ -51,10 +53,12 @@ class ViewControllerPhoto: UIViewController {
                 }
             }
         }
+        
+
         if UserDefaults.standard.object(forKey: UserDefaultsKey.kPhoto.rawValue) != nil {
         setImage()}
         
-        let closeKeyboard = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
+      //  let closeKeyboard = UITapGestureRecognizer(target: self, action: #selector(closeKeyboard))
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLike))
         
@@ -64,47 +68,43 @@ class ViewControllerPhoto: UIViewController {
         let rightGesture = UISwipeGestureRecognizer(target: self, action: #selector(didSwipe))
         rightGesture.direction = .right
         
-        self.view.addGestureRecognizer(closeKeyboard)
+      //  self.view.addGestureRecognizer(closeKeyboard)
         self.isLikedImage.addGestureRecognizer(tapGesture)
         self.centerImage.addGestureRecognizer(leftGesture)
         self.centerImage.addGestureRecognizer(rightGesture)
 
         self.navigationController?.isNavigationBarHidden = true
+        
+        print(images.count)
+        print(countOfImage)
+print(images)
+        collectionView.reloadData()
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        print(123)
+        print(images.count)
+        print(321)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        let center = NotificationCenter.default
-        center.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        center.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        let center = NotificationCenter.default
+//        center.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        center.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
 
-        let center = NotificationCenter.default
-        center.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        center.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+//        let center = NotificationCenter.default
+//        center.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+//        center.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    @objc func closeKeyboard() {
-        view.endEditing(true)
-    }
-    
-    @objc func keyboardWillShow(notification: NSNotification) {
-        botomSize.constant -= 135
-        UIView.animate(withDuration: 0.5) {
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-        botomSize.constant += 135
-        UIView.animate(withDuration: 0.5) {
-            self.view.layoutIfNeeded()
-        }
-    }
+//    @objc func closeKeyboard() {
+//        view.endEditing(true)
+//    }
     
     @IBAction func didTapAddButton() {
         let imagePicker = UIImagePickerController()
@@ -113,25 +113,25 @@ class ViewControllerPhoto: UIViewController {
         self.present(imagePicker, animated: true)
     }
     
-    @IBAction func didTapAddAlert() {
-        let view = Bundle.main.loadNibNamed("AlertView", owner: nil, options: nil)?.first
-        if let view = view as? AlertView {
-            alertView = view
-            alertView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-            self.view.addSubview(alertView!)
-        }
-    }
+//    @IBAction func didTapAddAlert() {
+//        let view = Bundle.main.loadNibNamed("AlertView", owner: nil, options: nil)?.first
+//        if let view = view as? AlertView {
+//            alertView = view
+//            alertView?.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+//            self.view.addSubview(alertView!)
+//        }
+//    }
     
-    @IBAction func didTapSaveComment() {
-        images.removeAll()
-        if let imageData: Data =  UserDefaults.standard.object(forKey:  UserDefaultsKey.kPhoto.rawValue) as? Data {
-            if var someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
-                someImages[position].comment = commentField.text ?? ""
-                
-                UserDefaults.standard.set(try? PropertyListEncoder().encode(someImages), forKey: UserDefaultsKey.kPhoto.rawValue)
-            }
-        }
-    }
+//    @IBAction func didTapSaveComment() {
+//        images.removeAll()
+//        if let imageData: Data =  UserDefaults.standard.object(forKey:  UserDefaultsKey.kPhoto.rawValue) as? Data {
+//            if var someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
+//                someImages[position].comment = commentField.text ?? ""
+//
+//                UserDefaults.standard.set(try? PropertyListEncoder().encode(someImages), forKey: UserDefaultsKey.kPhoto.rawValue)
+//            }
+//        }
+//    }
     
     @objc func didTapLike(){
         images.removeAll()
@@ -165,6 +165,7 @@ class ViewControllerPhoto: UIViewController {
     
     func setImage() {
         images.removeAll()
+        countOfImage = 0
         if let imageData: Data =  UserDefaults.standard.object(forKey:  UserDefaultsKey.kPhoto.rawValue) as? Data {
             if let someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
                 for someImage in someImages {
@@ -210,6 +211,8 @@ class ViewControllerPhoto: UIViewController {
         }
     }
         
+        images.removeAll()
+        countOfImage = 0
         if let imageData: Data =  UserDefaults.standard.object(forKey:  UserDefaultsKey.kPhoto.rawValue) as? Data {
             if let someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
                 for someImage in someImages {
@@ -223,16 +226,13 @@ class ViewControllerPhoto: UIViewController {
                 {
                     isLikedImage.image = UIImage(named: "dislike")
                 }
-                
-                commentField.text = someImages[position].comment
-            }
+                            }
         }
     }
     
     func savePhoto(newImage: UIImage) {
         print(5)
         if UserDefaults.standard.object(forKey: UserDefaultsKey.kPhoto.rawValue) == nil {
-            print(12312)
             var someImages: [SomeImage] = []
             let image = SomeImage(photo: newImage, isLiked: false)
             someImages.append(image)
@@ -243,15 +243,36 @@ class ViewControllerPhoto: UIViewController {
             if var someImages: [SomeImage] = try? PropertyListDecoder().decode(Array<SomeImage>.self, from: imageData) {
                     let image = SomeImage(photo: newImage, isLiked: false)
                     someImages.append(image)
-                  
-                print(12345)
-                
+                                  
                     UserDefaults.standard.set(try? PropertyListEncoder().encode(someImages), forKey: UserDefaultsKey.kPhoto.rawValue)
                 }
             }
         }
         setImage()
+        collectionView.reloadData()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return images.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionView", for: indexPath) as? CollectionView {
+
+           
+            cell.imageView.image = images[indexPath.row]
+            return cell
+        }
+
+        return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 70, height: 70)
+    }
+    
+    
 }
 
 extension ViewControllerPhoto: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
