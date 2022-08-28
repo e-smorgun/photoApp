@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import KeychainSwift
 
 class ViewController: UIViewController {
     @IBOutlet weak var passwordLabel: UILabel!
@@ -16,7 +17,7 @@ class ViewController: UIViewController {
     var count = 0
     var passwordNums = ["_" , "_" , "_" , "_"]
     
-    enum UserDefaultsKey: String {
+    enum Key: String {
         case kPassword = "kPassword"
     }
     
@@ -90,7 +91,10 @@ class ViewController: UIViewController {
     }
 
     func changeLabel(number: String){
-        let passwordFromUD = UserDefaults.standard.string(forKey: UserDefaultsKey.kPassword.rawValue)
+        let keychain = KeychainSwift()
+
+        let passwordFromKC = keychain.get(Key.kPassword.rawValue)
+        //let passwordFromUD = UserDefaults.standard.string(forKey: Key.kPassword.rawValue)
         
         switch(count){
         case 0: passwordNums[0] = number
@@ -102,7 +106,7 @@ class ViewController: UIViewController {
         case 3:passwordNums[3] = number
             passwordLabel.text = "\(passwordNums[0]) \(passwordNums[1]) \(passwordNums[2]) \(passwordNums[3])"
             
-            if password == passwordFromUD {
+            if password == passwordFromKC {
                 passwordLabel.textColor = .green
                 let story: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
                 let vc: ViewControllerPhoto = story.instantiateViewController(withIdentifier: "ViewControllerPhoto") as! ViewControllerPhoto

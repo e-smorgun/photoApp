@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import KeychainSwift
 
 class ViewControllerReg: UIViewController {
     @IBOutlet weak var passwordLabel: UILabel!
@@ -16,7 +17,7 @@ class ViewControllerReg: UIViewController {
     var count = 0
     var passwordNums = ["_" , "_" , "_" , "_"]
     
-    enum UserDefaultsKey: String {
+    enum Key: String {
         case kPassword = "kPassword"
     }
     
@@ -86,6 +87,7 @@ class ViewControllerReg: UIViewController {
     }
 
     func changeLabel(number: String){
+        let keychain = KeychainSwift()
         
         switch(count){
         case 0: passwordNums[0] = number
@@ -97,7 +99,9 @@ class ViewControllerReg: UIViewController {
         case 3:passwordNums[3] = number
             passwordLabel.text = "\(passwordNums[0]) \(passwordNums[1]) \(passwordNums[2]) \(passwordNums[3])"
         
-            UserDefaults.standard.set(password, forKey: UserDefaultsKey.kPassword.rawValue)
+            keychain.set(password, forKey: Key.kPassword.rawValue)
+            
+            UserDefaults.standard.set(password, forKey: Key.kPassword.rawValue)
             passwordLabel.textColor = .green
             self.navigationController?.popToRootViewController(animated: true)
             
